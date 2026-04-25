@@ -162,6 +162,16 @@ app.get('/api/admin/bookings', (req, res) => {
   res.json({ bookings: data.bookings });
 });
 
+// --- API: admin - svuota database (protetto da query param) ---
+app.post('/api/admin/clear', (req, res) => {
+  if (req.query.key !== 'crocerossa2026') {
+    return res.status(403).json({ error: 'Accesso negato.' });
+  }
+  const initial = { slots: generateSlots(), bookings: [] };
+  saveData(initial);
+  res.json({ success: true, message: 'Database svuotato con successo.' });
+});
+
 // --- Avvio server ---
 app.listen(PORT, () => {
   console.log(`\n  🏥 Itinerari della Salute - Croce Rossa Molfetta`);
